@@ -4,12 +4,12 @@ namespace ATmV2
     public class ATMBase
     {
 
-        public bool AddNewAccount(long cardNumber, int pin)
+        public void AddNewAccount(long cardNumber,string name, int pin, long balance)
         {
             ATM atmObject = null;
             using (var dbContext = new ATMEntities())
             {
-                var results = dbContext.spNewAccount(cardNumber, pin).GetEnumerator();
+                var results = dbContext.spNewAccount(cardNumber,name ,pin, balance).GetEnumerator();
                 while (results.MoveNext())
                 {
                     var result = results.Current;

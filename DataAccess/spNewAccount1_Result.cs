@@ -11,7 +11,7 @@ namespace DataAccess
 {
     using System;
     
-    public partial class spNewAccount_Result
+    public partial class spNewAccount1_Result
     {
         public long CardNumber { get; set; }
         public string Name { get; set; }

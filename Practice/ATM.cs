@@ -103,23 +103,28 @@ namespace ATmV2
             }
             return atmObject;
         }
-        public bool AddNewAccount(long cardNumber, int pin)
+        
+        public bool AddNewAccount(long cardNumber, string name, int pin, long balance)
         {
-            ATM atmObject = new ATM();
+            ATM atmObject = null;
             using (var dbContext = new ATMEntities())
             {
-                var results = dbContext.spNewAccount(cardNumber,Name, pin,CurrentBalance).GetEnumerator();
+                var results = dbContext.spNewAccount(cardNumber, name, pin, balance).GetEnumerator();
                 while (results.MoveNext())
                 {
                     var result = results.Current;
                     atmObject = new ATM();
+
                     atmObject.CardNumber = result.CardNumber;
                     atmObject.Name = result.Name;
                     atmObject.Pin = result.Pin;
-                   // atmObject.CurrentBalance = result.CurrentBalance;
+                    //atmObject.Cvv = result.Cvv;
+                    atmObject.CurrentBalance = result.CurrentBalance.Value;
+                    return true;
                 }
+
             }
-            return true;
+            return false;
         }
     }
 }

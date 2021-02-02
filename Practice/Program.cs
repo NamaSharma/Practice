@@ -40,6 +40,12 @@ namespace ATmV2
                             newatmpin = random.Next(1000, 9999);
                             //   newcardnumber = random.Next(Convert.ToInt64(100000000, 99));
                             Console.WriteLine("Your ATM pin is " + newatmpin);
+                            ATM atm = new ATM();
+                            if (!atm.AddNewAccount(newcardnumber, fullname,newatmpin,openingbalanceamount))
+                            {
+                                Console.WriteLine("You have created account successfully!");
+                                continue;
+                            }
                             Console.WriteLine("Thank You ");
                             break;
                         }

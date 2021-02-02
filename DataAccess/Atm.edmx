@@ -40,12 +40,6 @@
             <Parameter Name="CardNumber" Mode="In" Type="Int64" />
             <Parameter Name="Pin" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="spNewAccount" ReturnType="Collection(ATMModel.spNewAccount_Result)">
-            <Parameter Name="CardNumber" Mode="In" Type="Int64" />
-            <Parameter Name="Name" Mode="In" Type="String" />
-            <Parameter Name="Pin" Mode="In" Type="Int32" />
-            <Parameter Name="CurrentBalance" Mode="In" Type="Int64" />
-          </FunctionImport>
           <FunctionImport Name="UpdateCardDetails">
             <Parameter Name="Operation" Mode="In" Type="Int32" />
             <Parameter Name="CardNumber" Mode="In" Type="Int64" />
@@ -61,6 +55,12 @@
           <FunctionImport Name="ValidateCardNumber" ReturnType="Collection(Int32)">
           <Parameter Name="CardNumber" Mode="In" Type="Int64" />
           </FunctionImport>
+          <FunctionImport Name="spNewAccount" ReturnType="Collection(ATMModel.spNewAccount_Result)">
+            <Parameter Name="CardNumber" Mode="In" Type="Int64" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Pin" Mode="In" Type="Int32" />
+            <Parameter Name="CurrentBalance" Mode="In" Type="Int64" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="GetCardDetails_Result">
           <Property Type="Int64" Name="CardNumber" Nullable="false" />
@@ -74,10 +74,17 @@
           <Property Type="DateTime" Name="ModifiedDate" Nullable="true" Precision="23" />
           <Property Type="Int64" Name="CurrentBalance" Nullable="true" />
         </ComplexType>
+        <ComplexType Name="spNewAccount1_Result">
+          <Property Type="Int64" Name="CardNumber" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="Pin" Nullable="false" />
+          <Property Type="Int64" Name="CurrentBalance" Nullable="true" />
+        </ComplexType>
         <ComplexType Name="spNewAccount_Result">
           <Property Type="Int64" Name="CardNumber" Nullable="false" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="50" />
           <Property Type="Int32" Name="Pin" Nullable="false" />
+          <Property Type="Int64" Name="CurrentBalance" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -101,18 +108,19 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UpdateCardDetails" FunctionName="ATMModel.Store.UpdateCardDetails" />
+          <FunctionImportMapping FunctionImportName="ValidateCardDetails" FunctionName="ATMModel.Store.ValidateCardDetails" />
+          <FunctionImportMapping FunctionImportName="ValidateCardNumber" FunctionName="ATMModel.Store.ValidateCardNumber" />
           <FunctionImportMapping FunctionImportName="spNewAccount" FunctionName="ATMModel.Store.spNewAccount">
             <ResultMapping>
               <ComplexTypeMapping TypeName="ATMModel.spNewAccount_Result">
                 <ScalarProperty Name="CardNumber" ColumnName="CardNumber" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Pin" ColumnName="Pin" />
+                <ScalarProperty Name="CurrentBalance" ColumnName="CurrentBalance" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="UpdateCardDetails" FunctionName="ATMModel.Store.UpdateCardDetails" />
-          <FunctionImportMapping FunctionImportName="ValidateCardDetails" FunctionName="ATMModel.Store.ValidateCardDetails" />
-          <FunctionImportMapping FunctionImportName="ValidateCardNumber" FunctionName="ATMModel.Store.ValidateCardNumber" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

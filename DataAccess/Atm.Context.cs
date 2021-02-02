@@ -41,27 +41,6 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCardDetails_Result>("GetCardDetails", cardNumberParameter, pinParameter);
         }
     
-        public virtual ObjectResult<spNewAccount_Result> spNewAccount(Nullable<long> cardNumber, string name, Nullable<int> pin, Nullable<long> currentBalance)
-        {
-            var cardNumberParameter = cardNumber.HasValue ?
-                new ObjectParameter("CardNumber", cardNumber) :
-                new ObjectParameter("CardNumber", typeof(long));
-    
-            var nameParameter = name != null ?
-                new ObjectParameter("Name", name) :
-                new ObjectParameter("Name", typeof(string));
-    
-            var pinParameter = pin.HasValue ?
-                new ObjectParameter("Pin", pin) :
-                new ObjectParameter("Pin", typeof(int));
-    
-            var currentBalanceParameter = currentBalance.HasValue ?
-                new ObjectParameter("CurrentBalance", currentBalance) :
-                new ObjectParameter("CurrentBalance", typeof(long));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spNewAccount_Result>("spNewAccount", cardNumberParameter, nameParameter, pinParameter, currentBalanceParameter);
-        }
-    
         public virtual int UpdateCardDetails(Nullable<int> operation, Nullable<long> cardNumber, Nullable<int> pin, Nullable<int> newPin, Nullable<long> newBalance)
         {
             var operationParameter = operation.HasValue ?
@@ -111,6 +90,27 @@ namespace DataAccess
                 new ObjectParameter("CardNumber", typeof(long));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("ValidateCardNumber", cardNumberParameter);
+        }
+    
+        public virtual ObjectResult<spNewAccount_Result> spNewAccount(Nullable<long> cardNumber, string name, Nullable<int> pin, Nullable<long> currentBalance)
+        {
+            var cardNumberParameter = cardNumber.HasValue ?
+                new ObjectParameter("CardNumber", cardNumber) :
+                new ObjectParameter("CardNumber", typeof(long));
+    
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            var pinParameter = pin.HasValue ?
+                new ObjectParameter("Pin", pin) :
+                new ObjectParameter("Pin", typeof(int));
+    
+            var currentBalanceParameter = currentBalance.HasValue ?
+                new ObjectParameter("CurrentBalance", currentBalance) :
+                new ObjectParameter("CurrentBalance", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spNewAccount_Result>("spNewAccount", cardNumberParameter, nameParameter, pinParameter, currentBalanceParameter);
         }
     }
 }
