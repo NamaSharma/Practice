@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ATmV2", "Practice\ATmV2.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ATM_Machine", "ATM_Machine\ATM_Machine.csproj", "{27DA5025-A2D1-4E68-88A7-C01007B1F064}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{0D9F8853-8510-4064-AF97-CAC31A21D530}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{27DA5025-A2D1-4E68-88A7-C01007B1F064}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27DA5025-A2D1-4E68-88A7-C01007B1F064}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27DA5025-A2D1-4E68-88A7-C01007B1F064}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D9F8853-8510-4064-AF97-CAC31A21D530}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D9F8853-8510-4064-AF97-CAC31A21D530}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D9F8853-8510-4064-AF97-CAC31A21D530}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D9F8853-8510-4064-AF97-CAC31A21D530}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

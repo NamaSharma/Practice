@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ATmV2.Interfaces;
+//using ClassLibrary1;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -7,15 +9,13 @@ using System.Text;
 
 namespace ATmV2
 {
-    public class SQLOperations
+    public class SQLOperations: Isqloperation
     {
         public readonly string ConnectionString;
-
         public SQLOperations()
         {
             ConnectionString = ConfigurationManager.ConnectionStrings["ATM"].ConnectionString;
         }
-
         public int ExecuteStoreProcScalar(string procName, SqlParameter[] sqlParameterCollection)
         {
             int rowsAffected = 0;
@@ -33,7 +33,6 @@ namespace ATmV2
             }
             return rowsAffected;
         }
-
         public int ExecuteStoreProcNonQuery(string procName, SqlParameter[] sqlParameterCollection)
         {
             int rowsAffected = 0;
@@ -64,7 +63,6 @@ namespace ATmV2
             }
             connection.Open();
             dr = command.ExecuteReader();
-
             return dr;
         }
     }

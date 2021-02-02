@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+using DataAccess;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -8,6 +10,18 @@ namespace ATmV2
 {
     public class ATM
     {
+        //private long _cardNumber;
+        //public long getMethod()
+        //{
+        //    return _cardNumber;
+        //}
+        //public void setMethod(long value)
+        //{
+        //    if (true)
+        //    {
+        //        _cardNumber = value;
+        //    }          
+        //}
         public long CardNumber { get; set; }
         public string Name { get; set; }
         public long CurrentBalance { get; set; }
@@ -18,7 +32,6 @@ namespace ATmV2
         public DateTime CreatedDate { get; set; }
         public int ModifiedBy { get; set; }
         public DateTime ModifiedDate { get; set; }
-
         public ATM()
         {
 
@@ -31,110 +44,82 @@ namespace ATmV2
             Cvv = dr.GetFieldValue<int>("Cvv");
             CurrentBalance = dr.GetFieldValue<long>("CurrentBalance");
         }
-
         public bool ValidateCardNumber(long cardNumber)
         {
-            int rowsAffected = 0;
-
-            SQLOperations operations = new SQLOperations();
-            var parameter = new SqlParameter("@CardNumber", SqlDbType.BigInt);
-            parameter.Value = cardNumber;
-            var operationParam = new SqlParameter("@Operation", SqlDbType.Int);
-            operationParam.Value = 1;
-            rowsAffected = operations.ExecuteStoreProcScalar(Constants.ValidateCardProc, new SqlParameter[] { parameter, operationParam });
-
-            if (rowsAffected == 1)
+            using (var dbContext = new ATMEntities())
             {
-                return true;
-            }
-            return false;
+                var result = dbContext.ValidateCardDetails(1, cardNumber,Pin);
+                {
+                    var effectedRows = dbContext.ValidateCardNumber(cardNumber);
+                    return false;
+                }
+            }           
         }
-
+            
         public bool ValidatePin(long cardNumber, int pin)
-        {
-            int rowsAffected = 0;
-
-            SQLOperations operations = new SQLOperations();
-            var cardNoParam = new SqlParameter("@CardNumber", SqlDbType.BigInt);
-            cardNoParam.Value = cardNumber;
-            var pinParam = new SqlParameter("@Pin", SqlDbType.Int);
-            pinParam.Value = pin;
-            var operationParam = new SqlParameter("@Operation", SqlDbType.Int);
-            operationParam.Value = 2;
-
-            rowsAffected = operations.ExecuteStoreProcScalar(Constants.ValidateCardProc, new SqlParameter[] { cardNoParam, pinParam, operationParam });
-
-            if (rowsAffected == 1)
+        {         
+            using (var dbContext = new ATMEntities())
             {
-                return true;
+                var result = dbContext.ValidateCardDetails(2, cardNumber, pin).GetEnumerator();
+                while (result.MoveNext())
+                {
+                    return result.Current > 0;
+                }
             }
             return false;
         }
-
         public bool UpdatePin(long cardNumber, int oldPin, int newPin)
-        {
-            int rowsAffected = 0;
-
-            SQLOperations operations = new SQLOperations();
-            var cardNoParam = new SqlParameter("@CardNumber", SqlDbType.BigInt);
-            cardNoParam.Value = cardNumber;
-            var pinParam = new SqlParameter("@Pin", SqlDbType.Int);
-            pinParam.Value = oldPin;
-            var newPinParam = new SqlParameter("@NewPin", SqlDbType.Int);
-            newPinParam.Value = newPin;
-            var operationParam = new SqlParameter("@Operation", SqlDbType.Int);
-            operationParam.Value = 1;
-
-            rowsAffected = operations.ExecuteStoreProcNonQuery(Constants.UpdateCardProc, new SqlParameter[] { cardNoParam, pinParam, newPinParam, operationParam });
-
-            if (rowsAffected == 1)
+        {           
+            using (var dbContext = new ATMEntities())
             {
-                return true;
+                var effectedRows = dbContext.UpdateCardDetails(1, cardNumber, oldPin, newPin,null);
+                return effectedRows > 0;
             }
-            return false;
         }
-
         public bool WithdrawBalance(long cardNumber, int pin, long newBalance)
         {
-            int rowsAffected = 0;
-
-            SQLOperations operations = new SQLOperations();
-            var cardNoParam = new SqlParameter("@CardNumber", SqlDbType.BigInt);
-            cardNoParam.Value = cardNumber;
-            var pinParam = new SqlParameter("@Pin", SqlDbType.Int);
-            pinParam.Value = pin;
-            var newBalParam = new SqlParameter("@NewBalance", SqlDbType.BigInt);
-            newBalParam.Value = newBalance;
-            var operationParam = new SqlParameter("@Operation", SqlDbType.Int);
-            operationParam.Value = 2;
-            rowsAffected = operations.ExecuteStoreProcNonQuery(Constants.UpdateCardProc, new SqlParameter[] { cardNoParam, pinParam, newBalParam, operationParam });
-
-            if (rowsAffected == 1)
+            using (var dbContext = new ATMEntities())
             {
-                return true;
+                var effectedRows = dbContext.UpdateCardDetails(2, cardNumber, pin, null, newBalance);
+                return effectedRows > 0;
             }
-            return false;
         }
-
         public ATM GetAtmDetails(long cardNumber, int pin)
         {
-            ATM atmObj = null;
-            SQLOperations operations = new SQLOperations();
-            var cardNoParam = new SqlParameter("@CardNumber", SqlDbType.BigInt);
-            cardNoParam.Value = cardNumber;
-            var pinParam = new SqlParameter("@Pin", SqlDbType.Int);
-            pinParam.Value = pin;
-
-            var dr = operations.ExecuteStoreProcReader(Constants.GetCardDetailsProc, new SqlParameter[] { cardNoParam, pinParam });
-
-            while (dr.HasRows && dr.Read())
+            ATM atmObject = null;
+            using (var dbContext = new ATMEntities())
             {
-                atmObj = new ATM(dr);
+                var res = dbContext.GetCardDetails(cardNumber, pin).GetEnumerator();
+                while (res.MoveNext())
+                {
+                    var result = res.Current;
+                    atmObject = new ATM();
+                    atmObject.CardNumber = result.CardNumber;
+                    atmObject.Name = result.Name;
+                    atmObject.Pin = result.Pin;
+                    atmObject.Cvv = result.Cvv;
+                    atmObject.CurrentBalance = result.CurrentBalance.Value;
+                }
             }
-            dr.Close();
-
-            return atmObj;
+            return atmObject;
         }
-
+        public bool AddNewAccount(long cardNumber, int pin)
+        {
+            ATM atmObject = new ATM();
+            using (var dbContext = new ATMEntities())
+            {
+                var results = dbContext.spNewAccount(cardNumber,Name, pin,CurrentBalance).GetEnumerator();
+                while (results.MoveNext())
+                {
+                    var result = results.Current;
+                    atmObject = new ATM();
+                    atmObject.CardNumber = result.CardNumber;
+                    atmObject.Name = result.Name;
+                    atmObject.Pin = result.Pin;
+                   // atmObject.CurrentBalance = result.CurrentBalance;
+                }
+            }
+            return true;
+        }
     }
 }

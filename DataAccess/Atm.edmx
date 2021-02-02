@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ATMModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <Function Name="GetCardDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CardNumber" Type="bigint" Mode="In" />
+          <Parameter Name="Pin" Type="int" Mode="In" />
+        </Function>
+        <Function Name="spNewAccount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CardNumber" Type="bigint" Mode="In" />
+          <Parameter Name="Name" Type="nvarchar" Mode="In" />
+          <Parameter Name="Pin" Type="int" Mode="In" />
+          <Parameter Name="CurrentBalance" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="UpdateCardDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Operation" Type="int" Mode="In" />
+          <Parameter Name="CardNumber" Type="bigint" Mode="In" />
+          <Parameter Name="Pin" Type="int" Mode="In" />
+          <Parameter Name="NewPin" Type="int" Mode="In" />
+          <Parameter Name="NewBalance" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="ValidateCardDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Operation" Type="int" Mode="In" />
+          <Parameter Name="CardNumber" Type="bigint" Mode="In" />
+          <Parameter Name="Pin" Type="int" Mode="In" />
+        </Function>
+        <Function Name="ValidateCardNumber" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CardNumber" Type="bigint" Mode="In" />
+        </Function>
+        <EntityContainer Name="ATMModelStoreContainer" />
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ATMModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="ATMEntities" annotation:LazyLoadingEnabled="true" >
+          <FunctionImport Name="GetCardDetails" ReturnType="Collection(ATMModel.GetCardDetails_Result)">
+            <Parameter Name="CardNumber" Mode="In" Type="Int64" />
+            <Parameter Name="Pin" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="spNewAccount" ReturnType="Collection(ATMModel.spNewAccount_Result)">
+            <Parameter Name="CardNumber" Mode="In" Type="Int64" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Pin" Mode="In" Type="Int32" />
+            <Parameter Name="CurrentBalance" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateCardDetails">
+            <Parameter Name="Operation" Mode="In" Type="Int32" />
+            <Parameter Name="CardNumber" Mode="In" Type="Int64" />
+            <Parameter Name="Pin" Mode="In" Type="Int32" />
+            <Parameter Name="NewPin" Mode="In" Type="Int32" />
+            <Parameter Name="NewBalance" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="ValidateCardDetails" ReturnType="Collection(Int32)">
+            <Parameter Name="Operation" Mode="In" Type="Int32" />
+            <Parameter Name="CardNumber" Mode="In" Type="Int64" />
+            <Parameter Name="Pin" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="ValidateCardNumber" ReturnType="Collection(Int32)">
+          <Parameter Name="CardNumber" Mode="In" Type="Int64" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="GetCardDetails_Result">
+          <Property Type="Int64" Name="CardNumber" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="Cvv" Nullable="false" />
+          <Property Type="Int32" Name="Pin" Nullable="false" />
+          <Property Type="DateTime" Name="ExpiryDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="ModifiedBy" Nullable="true" />
+          <Property Type="DateTime" Name="ModifiedDate" Nullable="true" Precision="23" />
+          <Property Type="Int64" Name="CurrentBalance" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spNewAccount_Result">
+          <Property Type="Int64" Name="CardNumber" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="Pin" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ATMModelStoreContainer" CdmEntityContainer="ATMEntities" >
+          <FunctionImportMapping FunctionImportName="GetCardDetails" FunctionName="ATMModel.Store.GetCardDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ATMModel.GetCardDetails_Result">
+                <ScalarProperty Name="CardNumber" ColumnName="CardNumber" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Cvv" ColumnName="Cvv" />
+                <ScalarProperty Name="Pin" ColumnName="Pin" />
+                <ScalarProperty Name="ExpiryDate" ColumnName="ExpiryDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="CurrentBalance" ColumnName="CurrentBalance" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spNewAccount" FunctionName="ATMModel.Store.spNewAccount">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ATMModel.spNewAccount_Result">
+                <ScalarProperty Name="CardNumber" ColumnName="CardNumber" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Pin" ColumnName="Pin" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UpdateCardDetails" FunctionName="ATMModel.Store.UpdateCardDetails" />
+          <FunctionImportMapping FunctionImportName="ValidateCardDetails" FunctionName="ATMModel.Store.ValidateCardDetails" />
+          <FunctionImportMapping FunctionImportName="ValidateCardNumber" FunctionName="ATMModel.Store.ValidateCardNumber" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
